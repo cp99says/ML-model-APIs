@@ -40,6 +40,11 @@ def find_features(document):
 
 
 # api.add_resource(Sentiment, '/sentiment/<string:text>')
+@app.route("/",methods=['GET'])
+def get1():
+    return("flask server is up and running")
+
+
 
 @app.route("/test/<string:text>",methods=['POST'])
 def get(text):  
