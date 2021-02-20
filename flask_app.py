@@ -5,7 +5,7 @@ from nltk.tokenize import word_tokenize
 import nltk
 import json
 import pymongo
-nltk.download("punkt")
+#nltk.download("punkt")
 
 app = Flask(__name__)
 import db
