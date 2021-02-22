@@ -20,15 +20,30 @@ api = Api(app)
 #     return json.loads(dumps(data))
 
 puppies = []
+risk_words = {
+    'not good' : 'bad',
+    'not bad' : 'good',
+    'not nice' : 'bad',
+    'hate' : 'bad'
+}
 def find_features(document):
-        with open("word_features.txt", "rb") as fp:
+        with open("word_features_final.txt", "rb") as fp:
             word_features = pickle.load(fp)
+        document = document.lower()
         words = word_tokenize(document)
+        document_words = set(words)
         features = {}
         for w in word_features:
-            features[w] = (w in words)
+           features['contains({})'.format(w)] = (w in document_words)
+        for w in risk_words.keys():
+         if w in document:
+          features['contains({})'.format(risk_words[w])] = (w in document)
+          if w != 'hate':
+            features['contains({})'.format(w.split()[1])] = False
         return features
 
+# with open("word_features_final.txt", "rb") as fp:
+#             word_features = pickle.load(fp)
 # class Sentiment(Resource):
     
 #     def get(self,text):  
@@ -55,7 +70,7 @@ def get1():
 @cross_origin()
 def get(text):  
         print(text)
-        loaded_model = pickle.load(open("SentiAnalysis2.sav", 'rb'))
+        loaded_model = pickle.load(open("SentiAnalysisfinal.sav", 'rb'))
         feats = find_features(text)        
         result = loaded_model.classify(feats)
         user_collection.insert_one({"status": result})
